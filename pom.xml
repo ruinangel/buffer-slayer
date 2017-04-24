@@ -21,6 +21,7 @@
     <module>boundedqueue</module>
     <module>jdbc</module>
     <module>benchmark</module>
+    <module>jedis</module>
   </modules>
 
   <properties>
@@ -157,6 +158,12 @@
         <artifactId>jdeferred-core</artifactId>
         <version>1.2.5</version>
       </dependency>
+
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-core</artifactId>
+        <version>2.7.22</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -211,6 +218,16 @@
     </pluginManagement>
 
     <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>${maven.compiler.source}</source>
+          <target>${maven.compiler.target}</target>
+          <testSource>${maven.compiler.testSource}</testSource>
+          <testTarget>${maven.compiler.testTarget}</testTarget>
+        </configuration>
+      </plugin>
+
       <plugin>
         <artifactId>maven-release-plugin</artifactId>
         <version>${maven-release-plugin.version}</version>

@@ -1,7 +1,6 @@
 package io.bufferslayer;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
+import java.util.ArrayList;
 import java.util.List;
 import org.jdeferred.multiple.MultipleResults;
 import org.jdeferred.multiple.OneResult;
@@ -12,11 +11,11 @@ import org.jdeferred.multiple.OneResult;
 class DeferredUtil {
 
   static List<Object> toResults(MultipleResults mr) {
-    Builder<Object> builder = ImmutableList.builder();
+    ArrayList<Object> result = new ArrayList<>();
     for (OneResult next : mr) {
       List<Object> batchResult = (List<Object>) next.getResult();
-      builder.addAll(batchResult);
+      result.addAll(batchResult);
     }
-    return builder.build();
+    return result;
   }
 }
