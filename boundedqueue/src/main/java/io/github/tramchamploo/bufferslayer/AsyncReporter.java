@@ -80,7 +80,12 @@ public class AsyncReporter<M extends Message, R> extends TimeDriven<MessageKey> 
   }
 
   AsyncSender<M, R> toAsyncSender(Builder<M, R> builder) {
-    return new AsyncSenderAdaptor<>(builder.sender, id, builder.senderThreads);
+    Sender<M, R> sender = builder.sender;
+    if (sender instanceof AsyncSender) {
+      return (AsyncSender<M, R>) sender;
+    } else {
+      return new AsyncSenderAdaptor<>((SyncSender<M, R>)sender, id, builder.senderThreads);
+    }
   }
 
   public static <M extends Message, R> Builder<M, R> builder(Sender<M, R> sender) {

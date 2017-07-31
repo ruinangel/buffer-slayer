@@ -26,10 +26,10 @@ final class AsyncSenderAdaptor<M extends Message, R> implements AsyncSender<M, R
 
   private static final Logger logger = LoggerFactory.getLogger(AsyncReporter.class);
 
-  private final Sender<M, R> delegate;
+  private final SyncSender<M, R> delegate;
   private final Executor executor;
 
-  AsyncSenderAdaptor(Sender<M, R> delegate, long reporterId, int senderThreads) {
+  AsyncSenderAdaptor(SyncSender<M, R> delegate, long reporterId, int senderThreads) {
     this.delegate = checkNotNull(delegate);
     checkArgument(senderThreads > 0, "senderThreads > 0: %s", senderThreads);
 

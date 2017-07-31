@@ -25,26 +25,26 @@ public abstract class AbstractBatchJdbcTemplateBenchmark {
   private DriverManagerDataSource dataSource;
   private BatchJdbcTemplate batch;
   private JdbcTemplate unbatch;
-  private Reporter<Sql, Integer> reporter;
+  private Reporter<SQL, Integer> reporter;
   private static SenderProxy proxy;
   private static AtomicLong counter = new AtomicLong();
 
   private static final String CREATE_DATABASE = "CREATE DATABASE IF NOT EXISTS test";
-  private static final String CREATE_TABLE = "CREATE TABLE test.benchmark(id INT PRIMARY KEY AUTO_INCREMENT, data VARCHAR(32), time TIMESTAMP);";
-  private static final String DROP_TABLE = "DROP TABLE IF EXISTS test.benchmark;";
-  private static final String TRUNCATE_TABLE = "TRUNCATE TABLE test.benchmark;";
-  private static final String INSERTION = "INSERT INTO test.benchmark(data, time) VALUES(?, ?);";
+  private static final String CREATE_TABLE = "CREATE TABLE test.benchmark(id INT PRIMARY KEY AUTO_INCREMENT, data VARCHAR(32), time TIMESTAMP)";
+  private static final String DROP_TABLE = "DROP TABLE IF EXISTS test.benchmark";
+  private static final String TRUNCATE_TABLE = "TRUNCATE TABLE test.benchmark";
+  private static final String INSERTION = "INSERT INTO test.benchmark(data, time) VALUES(?, ?)";
 
   static String propertyOr(String key, String fallback) {
     return System.getProperty(key, fallback);
   }
 
-  protected abstract Reporter<Sql, Integer> reporter(Sender<Sql, Integer> sender);
+  protected abstract Reporter<SQL, Integer> reporter(Sender<SQL, Integer> sender);
 
   @Setup
   public void setup() throws PropertyVetoException {
     dataSource = new DriverManagerDataSource();
-    dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+    dataSource.setDriverClassName("com.mysql.jdbc.Driver");
     dataSource.setUrl(propertyOr("jdbcUrl", "jdbc:mysql://127.0.0.1:3306?useSSL=false"));
     dataSource.setUsername(propertyOr("username", "root"));
     dataSource.setPassword(propertyOr("password", "root"));

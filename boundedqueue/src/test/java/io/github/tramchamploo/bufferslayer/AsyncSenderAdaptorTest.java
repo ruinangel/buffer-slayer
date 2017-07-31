@@ -14,9 +14,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.jdeferred.Promise;
 import org.junit.Test;
 
-/**
- * Created by tramchamploo on 2017/5/18.
- */
 public class AsyncSenderAdaptorTest {
 
   private AsyncSenderAdaptor<TestMessage, Integer> adaptor;

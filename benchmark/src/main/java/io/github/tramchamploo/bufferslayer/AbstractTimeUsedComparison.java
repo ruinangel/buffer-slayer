@@ -9,7 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 /**
- * Created by tramchamploo on 2017/3/30.
+ * Compare time used for batched and non batched sql updates.
  */
 public abstract class AbstractTimeUsedComparison {
 
@@ -27,8 +27,8 @@ public abstract class AbstractTimeUsedComparison {
     SenderProxy proxy;
 
     DriverManagerDataSource dataSource = new DriverManagerDataSource();
-    dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-    dataSource.setUrl(propertyOr("jdbcUrl", "jdbc:mysql://127.0.0.1:3306?useSSL=false"));
+    dataSource.setDriverClassName("com.mysql.jdbc.Driver");
+    dataSource.setUrl(propertyOr("jdbcUrl", "jdbc:mysql://127.0.0.1:3306?useSSL=false&rewriteBatchedStatements=true"));
     dataSource.setUsername(propertyOr("username", "root"));
     dataSource.setPassword(propertyOr("password", "root"));
 
@@ -38,10 +38,10 @@ public abstract class AbstractTimeUsedComparison {
     AtomicLong counter = new AtomicLong();
 
     final String CREATE_DATABASE = "CREATE DATABASE IF NOT EXISTS test";
-    final String CREATE_TABLE = "CREATE TABLE test.benchmark(id INT PRIMARY KEY AUTO_INCREMENT, data VARCHAR(32), time TIMESTAMP);";
-    final String DROP_TABLE = "DROP TABLE IF EXISTS test.benchmark;";
-    final String INSERTION = "INSERT INTO test.benchmark(data, time) VALUES(?, ?);";
-    final String MODIFICATION = "UPDATE test.benchmark SET data = ? WHERE id = ?;";
+    final String CREATE_TABLE = "CREATE TABLE test.benchmark(id INT PRIMARY KEY AUTO_INCREMENT, data VARCHAR(32), time TIMESTAMP)";
+    final String DROP_TABLE = "DROP TABLE IF EXISTS test.benchmark";
+    final String INSERTION = "INSERT INTO test.benchmark(data, time) VALUES(?, ?)";
+    final String MODIFICATION = "UPDATE test.benchmark SET data = ? WHERE id = ?";
 
     CountDownLatch countDown = new CountDownLatch(1);
 
@@ -52,7 +52,7 @@ public abstract class AbstractTimeUsedComparison {
       }
     });
 
-    Reporter<Sql, Integer> reporter = reporter(proxy);
+    Reporter<SQL, Integer> reporter = reporter(proxy);
     batch = new BatchJdbcTemplate(delegate, reporter);
     batch.setDataSource(dataSource);
 
@@ -91,5 +91,5 @@ public abstract class AbstractTimeUsedComparison {
     unbatch.update(DROP_TABLE);
   }
 
-  protected abstract Reporter<Sql, Integer> reporter(Sender<Sql, Integer> actual);
+  protected abstract Reporter<SQL, Integer> reporter(Sender<SQL, Integer> actual);
 }

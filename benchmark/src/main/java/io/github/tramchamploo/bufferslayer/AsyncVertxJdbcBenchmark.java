@@ -1,5 +1,6 @@
 package io.github.tramchamploo.bufferslayer;
 
+import io.vertx.ext.sql.UpdateResult;
 import java.util.concurrent.TimeUnit;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -20,18 +21,17 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.SECONDS)
 @State(Scope.Group)
-public class AsyncBatchJdbcTemplateBenchmark extends AbstractBatchJdbcTemplateBenchmark {
+public class AsyncVertxJdbcBenchmark extends AbstractVertxJdbcBenchmark {
 
-  protected Reporter<SQL, Integer> reporter(Sender<SQL, Integer> sender) {
+  protected Reporter<Statement, UpdateResult> reporter(Sender<Statement, UpdateResult> sender) {
     return AsyncReporter.builder(sender)
         .pendingKeepalive(1, TimeUnit.SECONDS)
-        .senderThreads(10)
         .build();
   }
 
   public static void main(String[] args) throws RunnerException {
     Options opt = new OptionsBuilder()
-        .include(".*" + AsyncBatchJdbcTemplateBenchmark.class.getSimpleName() + ".*")
+        .include(".*" + AsyncVertxJdbcBenchmark.class.getSimpleName() + ".*")
         .build();
 
     new Runner(opt).run();
